@@ -12,14 +12,17 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.eyepetizer.app.R
 import com.eyepetizer.app.presentation.ui.screens.home.HomeScreen
 import com.eyepetizer.app.presentation.ui.screens.discover.DiscoverScreen
 import com.eyepetizer.app.presentation.ui.screens.profile.ProfileScreen
+import com.eyepetizer.app.presentation.ui.screens.video.VideoDetailScreen
 
 /**
  * 应用导航配置
@@ -79,6 +82,16 @@ fun AppNavigation() {
             }
             composable(Screen.Profile.route) {
                 ProfileScreen(navController = navController)
+            }
+            composable(
+                route = "video_detail/{videoId}",
+                arguments = listOf(navArgument("videoId") { type = NavType.StringType })
+            ) { backStackEntry ->
+                val videoId = backStackEntry.arguments?.getString("videoId") ?: ""
+                VideoDetailScreen(
+                    videoId = videoId,
+                    navController = navController
+                )
             }
         }
     }
