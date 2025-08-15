@@ -3,13 +3,11 @@ package com.eyepetizer.app.presentation.ui.components
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Pause
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.VolumeOff
-import androidx.compose.material.icons.filled.VolumeUp
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -23,46 +21,36 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
-import com.eyepetizer.app.presentation.ui.theme.VideoControlBg
-import com.eyepetizer.app.presentation.ui.theme.VideoOverlay
+import kotlinx.coroutines.delay
 
-/**
- * 视频播放器组件
- */
 @Composable
 fun VideoPlayer(
     videoUrl: String,
     modifier: Modifier = Modifier,
-    autoPlay: Boolean = false,
-    showControls: Boolean = true,
-    onPlayerReady: ((ExoPlayer) -> Unit)? = null
+    autoPlay: Boolean = false
 ) {
     val context = LocalContext.current
-    var isPlaying by remember { mutableStateOf(autoPlay) }
-    var isMuted by remember { mutableStateOf(false) }
-    var showControlsOverlay by remember { mutableStateOf(false) }
+    var isPlaying by remember { mutableStateOf(false) }
+    var showControls by remember { mutableStateOf(true) }
+    var isBuffering by remember { mutableStateOf(false) }
     
-    // 创建ExoPlayer实例
+    // 创建 ExoPlayer 实例
     val exoPlayer = remember {
         ExoPlayer.Builder(context).build().apply {
-            val mediaItem = MediaItem.fromUri(videoUrl)
-            setMediaItem(mediaItem)
+            setMediaItem(MediaItem.fromUri(videoUrl))
             prepare()
             playWhenReady = autoPlay
             
-            // 添加播放状态监听器
             addListener(object : Player.Listener {
                 override fun onIsPlayingChanged(playing: Boolean) {
                     isPlaying = playing
                 }
             })
-            
-            onPlayerReady?.invoke(this)
         }
     }
     
-    // 在组件销毁时释放播放器
-    DisposableEffect(exoPlayer) {
+    // 清理资源
+    DisposableEffect(Unit) {
         onDispose {
             exoPlayer.release()
         }
@@ -73,8 +61,11 @@ fun VideoPlayer(
             .fillMaxWidth()
             .aspectRatio(16f / 9f)
             .clip(RoundedCornerShape(12.dp))
+            .clickable {
+                showControls = !showControls
+            }
     ) {
-        // ExoPlayer视图
+        // ExoPlayer 视图
         AndroidView(
             factory = { ctx ->
                 PlayerView(ctx).apply {
@@ -83,190 +74,123 @@ fun VideoPlayer(
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.MATCH_PARENT
                     )
-                    useController = false // 使用自定义控制器
-                    setShowBuffering(PlayerView.SHOW_BUFFERING_WHEN_PLAYING)
+                    useController = false
+                    PlayerView.SHOW_BUFFERING_WHEN_PLAYING
                 }
             },
             modifier = Modifier.fillMaxSize()
         )
         
-        // 自定义控制层
+        // 控制层覆盖
         if (showControls) {
-            VideoControlsOverlay(
+            VideoControlOverlay(
                 isPlaying = isPlaying,
-                isMuted = isMuted,
-                showControls = showControlsOverlay,
-                onPlayPauseClick = {
+                onPlayPause = {
                     if (isPlaying) {
                         exoPlayer.pause()
                     } else {
                         exoPlayer.play()
                     }
                 },
-                onMuteClick = {
-                    isMuted = !isMuted
-                    exoPlayer.volume = if (isMuted) 0f else 1f
-                },
-                onControlsVisibilityChange = { visible ->
-                    showControlsOverlay = visible
+                onVolumeToggle = {
+                    exoPlayer.volume = if (exoPlayer.volume > 0) 0f else 1f
                 },
                 modifier = Modifier.fillMaxSize()
             )
         }
-    }
-}
-
-/**
- * 视频控制层覆盖组件
- */
-@Composable
-private fun VideoControlsOverlay(
-    isPlaying: Boolean,
-    isMuted: Boolean,
-    showControls: Boolean,
-    onPlayPauseClick: () -> Unit,
-    onMuteClick: () -> Unit,
-    onControlsVisibilityChange: (Boolean) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    var controlsVisible by remember { mutableStateOf(showControls) }
-    
-    // 自动隐藏控制器
-    LaunchedEffect(controlsVisible) {
-        if (controlsVisible && isPlaying) {
-            kotlinx.coroutines.delay(3000) // 3秒后自动隐藏
-            controlsVisible = false
-            onControlsVisibilityChange(false)
+        
+        // 缓冲指示器
+        if (isBuffering) {
+            LoadingIndicator(
+                modifier = Modifier.align(Alignment.Center)
+            )
         }
     }
     
+    // 自动隐藏控制栏
+    LaunchedEffect(showControls) {
+        if (showControls) {
+            delay(3000)
+            showControls = false
+        }
+    }
+}
+
+@Composable
+private fun VideoControlOverlay(
+    isPlaying: Boolean,
+    onPlayPause: () -> Unit,
+    onVolumeToggle: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Box(
         modifier = modifier
-            .background(
-                if (controlsVisible) VideoOverlay else Color.Transparent
-            )
+            .background(Color.Black.copy(alpha = 0.3f))
     ) {
-        // 点击区域显示/隐藏控制器
+        // 中央播放/暂停按钮
         Box(
             modifier = Modifier
-                .fillMaxSize()
-                .then(
-                    if (!controlsVisible) {
-                        Modifier.background(Color.Transparent)
-                    } else {
-                        Modifier
-                    }
+                .align(Alignment.Center)
+                .size(64.dp)
+                .background(
+                    Color.Black.copy(alpha = 0.6f),
+                    RoundedCornerShape(32.dp)
+                )
+                .clickable { onPlayPause() },
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
+                contentDescription = if (isPlaying) "暂停" else "播放",
+                tint = Color.White,
+                modifier = Modifier.size(32.dp)
+            )
+        }
+        
+        // 右上角音量按钮
+        IconButton(
+            onClick = onVolumeToggle,
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(16.dp)
+                .background(
+                    Color.Black.copy(alpha = 0.6f),
+                    RoundedCornerShape(20.dp)
+                )
+        ) {
+            Icon(
+                imageVector = Icons.Default.VolumeUp,
+                contentDescription = "音量",
+                tint = Color.White
+            )
+        }
+    }
+}
+
+@Composable
+private fun LoadingIndicator(
+    modifier: Modifier = Modifier
+) {
+    var isVisible by remember { mutableStateOf(false) }
+    
+    LaunchedEffect(Unit) {
+        isVisible = true
+    }
+    
+    if (isVisible) {
+        Box(
+            modifier = modifier
+                .size(80.dp)
+                .background(
+                    Color.Black.copy(alpha = 0.6f),
+                    RoundedCornerShape(12.dp)
                 ),
             contentAlignment = Alignment.Center
         ) {
-            // 播放/暂停按钮
-            if (controlsVisible || !isPlaying) {
-                IconButton(
-                    onClick = {
-                        onPlayPauseClick()
-                        controlsVisible = true
-                        onControlsVisibilityChange(true)
-                    },
-                    modifier = Modifier
-                        .size(64.dp)
-                        .background(
-                            VideoControlBg,
-                            RoundedCornerShape(32.dp)
-                        )
-                ) {
-                    Icon(
-                        imageVector = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
-                        contentDescription = if (isPlaying) "暂停" else "播放",
-                        tint = Color.White,
-                        modifier = Modifier.size(32.dp)
-                    )
-                }
-            }
-        }
-        
-        // 音量控制按钮
-        if (controlsVisible) {
-            IconButton(
-                onClick = {
-                    onMuteClick()
-                    controlsVisible = true
-                    onControlsVisibilityChange(true)
-                },
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(16.dp)
-                    .background(
-                        VideoControlBg,
-                        RoundedCornerShape(20.dp)
-                    )
-            ) {
-                Icon(
-                    imageVector = if (isMuted) Icons.Default.VolumeOff else Icons.Default.VolumeUp,
-                    contentDescription = if (isMuted) "取消静音" else "静音",
-                    tint = Color.White
-                )
-            }
-        }
-        
-        // 点击空白区域切换控制器显示状态
-        if (!controlsVisible) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Transparent)
-                    .then(
-                        Modifier.clickable {
-                            controlsVisible = true
-                            onControlsVisibilityChange(true)
-                        }
-                    )
+            CircularProgressIndicator(
+                color = Color.White,
+                modifier = Modifier.size(40.dp)
             )
-        }
-    }
-}
-
-/**
- * 简化版视频播放器，用于列表中的预览
- */
-@Composable
-fun VideoPreviewPlayer(
-    videoUrl: String,
-    coverUrl: String,
-    modifier: Modifier = Modifier,
-    autoPlay: Boolean = false
-) {
-    var isLoading by remember { mutableStateOf(true) }
-    
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .aspectRatio(16f / 9f)
-            .clip(RoundedCornerShape(8.dp))
-    ) {
-        // 视频播放器
-        VideoPlayer(
-            videoUrl = videoUrl,
-            autoPlay = autoPlay,
-            showControls = false,
-            onPlayerReady = { 
-                isLoading = false 
-            },
-            modifier = Modifier.fillMaxSize()
-        )
-        
-        // 加载指示器
-        if (isLoading) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.3f)),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator(
-                    color = Color.White,
-                    modifier = Modifier.size(32.dp)
-                )
-            }
         }
     }
 }
