@@ -1,0 +1,53 @@
+<resources>
+    <string name="app_name">开眼视频</string>
+    
+    <!-- 底部导航 -->
+    <string name="nav_home">首页</string>
+    <string name="nav_discover">发现</string>
+    <string name="nav_profile">我的</string>
+    
+    <!-- 首页相关 -->
+    <string name="home_title">推荐</string>
+    <string name="home_refresh">下拉刷新</string>
+    <string name="home_load_more">加载更多</string>
+    
+    <!-- 视频相关 -->
+    <string name="video_play">播放</string>
+    <string name="video_pause">暂停</string>
+    <string name="video_like">点赞</string>
+    <string name="video_share">分享</string>
+    <string name="video_comment">评论</string>
+    <string name="video_favorite">收藏</string>
+    <string name="video_duration_format">%02d:%02d</string>
+    
+    <!-- 搜索相关 -->
+    <string name="search_hint">搜索视频、作者</string>
+    <string name="search_result_empty">暂无搜索结果</string>
+    <string name="search_history">搜索历史</string>
+    <string name="search_hot">热门搜索</string>
+    
+    <!-- 分类相关 -->
+    <string name="category_all">全部</string>
+    <string name="category_music">音乐</string>
+    <string name="category_tech">科技</string>
+    <string name="category_travel">旅行</string>
+    <string name="category_food">美食</string>
+    <string name="category_art">艺术</string>
+    
+    <!-- 个人中心 -->
+    <string name="profile_login">登录</string>
+    <string name="profile_logout">退出登录</string>
+    <string name="profile_settings">设置</string>
+    <string name="profile_history">观看历史</string>
+    <string name="profile_favorites">我的收藏</string>
+    <string name="profile_likes">我的点赞</string>
+    
+    <!-- 通用 -->
+    <string name="loading">加载中...</string>
+    <string name="error_network">网络连接失败</string>
+    <string name="error_unknown">未知错误</string>
+    <string name="retry">重试</string>
+    <string name="cancel">取消</string>
+    <string name="confirm">确认</string>
+    <string name="empty_data">暂无数据</string>
+</resources>
