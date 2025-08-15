@@ -1,53 +1,112 @@
 <resources>
-    <string name="app_name">开眼视频</string>
+    <string name="app_name">开眼</string>
     
-    <!-- 底部导航 -->
+    <!-- 导航相关 -->
     <string name="nav_home">首页</string>
     <string name="nav_discover">发现</string>
     <string name="nav_profile">我的</string>
+    <string name="nav_video_detail">视频详情</string>
     
-    <!-- 首页相关 -->
-    <string name="home_title">推荐</string>
-    <string name="home_refresh">下拉刷新</string>
-    <string name="home_load_more">加载更多</string>
-    
-    <!-- 视频相关 -->
-    <string name="video_play">播放</string>
-    <string name="video_pause">暂停</string>
-    <string name="video_like">点赞</string>
-    <string name="video_share">分享</string>
-    <string name="video_comment">评论</string>
-    <string name="video_favorite">收藏</string>
-    <string name="video_duration_format">%02d:%02d</string>
-    
-    <!-- 搜索相关 -->
-    <string name="search_hint">搜索视频、作者</string>
-    <string name="search_result_empty">暂无搜索结果</string>
-    <string name="search_history">搜索历史</string>
-    <string name="search_hot">热门搜索</string>
-    
-    <!-- 分类相关 -->
-    <string name="category_all">全部</string>
-    <string name="category_music">音乐</string>
-    <string name="category_tech">科技</string>
-    <string name="category_travel">旅行</string>
-    <string name="category_food">美食</string>
-    <string name="category_art">艺术</string>
-    
-    <!-- 个人中心 -->
-    <string name="profile_login">登录</string>
-    <string name="profile_logout">退出登录</string>
-    <string name="profile_settings">设置</string>
-    <string name="profile_history">观看历史</string>
-    <string name="profile_favorites">我的收藏</string>
-    <string name="profile_likes">我的点赞</string>
-    
-    <!-- 通用 -->
+    <!-- 通用文本 -->
     <string name="loading">加载中...</string>
+    <string name="retry">重试</string>
     <string name="error_network">网络连接失败</string>
     <string name="error_unknown">未知错误</string>
-    <string name="retry">重试</string>
+    <string name="search">搜索</string>
+    <string name="search_hint">搜索视频</string>
+    <string name="no_results">未找到相关内容</string>
+    
+    <!-- 视频相关 -->
+    <string name="play">播放</string>
+    <string name="pause">暂停</string>
+    <string name="like">点赞</string>
+    <string name="share">分享</string>
+    <string name="comment">评论</string>
+    <string name="collect">收藏</string>
+    <string name="play_count">%d 次播放</string>
+    <string name="like_count">%d 点赞</string>
+    <string name="comment_count">%d 评论</string>
+    <string name="share_count">%d 分享</string>
+    
+    <!-- 个人中心 -->
+    <string name="profile_following">关注</string>
+    <string name="profile_followers">粉丝</string>
+    <string name="profile_likes">获赞</string>
+    <string name="profile_videos">作品</string>
+    <string name="profile_watch_history">观看历史</string>
+    <string name="profile_liked_videos">我的点赞</string>
+    <string name="profile_collected_videos">我的收藏</string>
+    <string name="profile_clear_history">清空历史</string>
+    <string name="profile_offline_cache">离线缓存</string>
+    <string name="profile_feedback">意见反馈</string>
+    <string name="profile_logout">退出登录</string>
+    <string name="profile_settings">设置</string>
+    <string name="profile_verified">已认证</string>
+    <string name="profile_level">等级</string>
+    
+    <!-- 分类相关 -->
+    <string name="category_recommend">推荐</string>
+    <string name="category_tech">科技</string>
+    <string name="category_food">美食</string>
+    <string name="category_travel">旅行</string>
+    <string name="category_music">音乐</string>
+    <string name="category_sports">运动</string>
+    <string name="category_fashion">时尚</string>
+    <string name="category_game">游戏</string>
+    
+    <!-- 视频播放器 -->
+    <string name="player_fullscreen">全屏</string>
+    <string name="player_exit_fullscreen">退出全屏</string>
+    <string name="player_volume">音量</string>
+    <string name="player_speed">播放速度</string>
+    <string name="player_quality">画质</string>
+    <string name="player_subtitle">字幕</string>
+    
+    <!-- 错误信息 -->
+    <string name="error_load_video">视频加载失败</string>
+    <string name="error_load_user">用户信息加载失败</string>
+    <string name="error_load_categories">分类加载失败</string>
+    <string name="error_search">搜索失败</string>
+    
+    <!-- 空状态 -->
+    <string name="empty_watch_history">暂无观看历史</string>
+    <string name="empty_liked_videos">暂无点赞视频</string>
+    <string name="empty_collected_videos">暂无收藏视频</string>
+    <string name="empty_search_results">未找到相关视频</string>
+    
+    <!-- 功能菜单 -->
+    <string name="menu_functions">功能菜单</string>
+    <string name="menu_download">下载</string>
+    <string name="menu_history">历史记录</string>
+    <string name="menu_night_mode">夜间模式</string>
+    <string name="menu_about">关于我们</string>
+    
+    <!-- 用户等级 -->
+    <string name="user_level_newbie">新手</string>
+    <string name="user_level_expert">达人</string>
+    <string name="user_level_professional">专家</string>
+    <string name="user_level_master">大师</string>
+    
+    <!-- 时间格式 -->
+    <string name="time_just_now">刚刚</string>
+    <string name="time_minutes_ago">%d分钟前</string>
+    <string name="time_hours_ago">%d小时前</string>
+    <string name="time_days_ago">%d天前</string>
+    <string name="time_weeks_ago">%d周前</string>
+    <string name="time_months_ago">%d个月前</string>
+    
+    <!-- 数量格式 -->
+    <string name="count_thousand">%dk</string>
+    <string name="count_ten_thousand">%d万</string>
+    
+    <!-- 操作确认 -->
+    <string name="confirm_clear_history">确定要清空观看历史吗？</string>
+    <string name="confirm_logout">确定要退出登录吗？</string>
+    <string name="confirm">确定</string>
     <string name="cancel">取消</string>
-    <string name="confirm">确认</string>
-    <string name="empty_data">暂无数据</string>
+    
+    <!-- 网络状态 -->
+    <string name="network_unavailable">网络不可用</string>
+    <string name="network_slow">网络较慢</string>
+    <string name="network_wifi_only">仅在WiFi下播放</string>
 </resources>
