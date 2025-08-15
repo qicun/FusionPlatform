@@ -12,16 +12,7 @@ import javax.inject.Inject
 class GetVideosByCategoryUseCase @Inject constructor(
     private val videoRepository: VideoRepository
 ) {
-    
-    /**
-     * 执行根据分类获取视频
-     * @param categoryId 分类ID
-     */
-    operator fun invoke(categoryId: String): Flow<Result<List<Video>>> {
-        if (categoryId.isBlank()) {
-            throw IllegalArgumentException("分类ID不能为空")
-        }
-        
+    suspend operator fun invoke(categoryId: String): Flow<Result<List<Video>>> {
         return videoRepository.getVideosByCategory(categoryId)
     }
 }
